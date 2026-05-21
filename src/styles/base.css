@@ -104,3 +104,13 @@ picture {
   background-size: 0.25rem 0.25rem;
   color: var(--color-background);
 }
+
+.pattern-dots.pattern-dots__wide {
+  background-color: var(--color-background);
+  background-image: radial-gradient(
+    var(--color-fainter) 0.5px,
+    var(--color-background) 0.5px
+  );
+  background-size: 0.5rem 0.5rem;
+  color: var(--color-background);
+}
