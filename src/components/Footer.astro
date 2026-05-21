@@ -76,21 +76,21 @@ import HeadingSection from "./HeadingSection.astro";
 
     <!-- Footer content -->
     <div
-      class="container mx-auto flex w-full max-w-3xl justify-between px-8 py-16"
+      class="container mx-auto flex w-full max-w-4xl justify-between px-8 py-16"
     >
       <!-- Left -->
       <div class="leading-tight">
-        <p class="font-decorative mb-1 text-6xl">Grant Keller</p>
-        <p class="mb-6 border-b pb-4 indent-2 font-mono text-base font-bold">
+        <p class="font-decorative text-emphasis mb-1 -indent-1 text-6xl">
+          Grant Keller
+        </p>
+        <p class="mb-6 border-b pb-4 font-mono text-base font-bold">
           Last of the Freelance Hackers
         </p>
-        <p class="mb-4 indent-2 font-mono text-xs font-extralight italic">
+        <p class="mb-4 font-mono text-xs font-extralight italic">
           Greatest swordfighter east of the 5
         </p>
-        <p class="mb-4 indent-2 font-mono text-sm">
-          Field Engineer, Frontend Division
-        </p>
-        <p class="indent-2 font-mono text-sm">
+        <p class="mb-4 font-mono text-sm">Field Engineer, Frontend Division</p>
+        <p class="font-mono text-sm">
           Specializing in interface intel
           <span class="mt-1 block text-sm font-extralight"
             >[ design - systems - code ]</span
@@ -105,7 +105,7 @@ import HeadingSection from "./HeadingSection.astro";
             text-sm leading-relaxed"
         >
           <span
-            class="font-display mb-1 block text-lg tracking-widest
+            class="font-display mb-1 block text-base tracking-widest
               whitespace-nowrap"
             >Site built with&nbsp;</span
           >
@@ -130,6 +130,21 @@ import HeadingSection from "./HeadingSection.astro";
         </p>
 
         <a
+          class="text-emphasis border-faint hover:text-accent-hover group flex
+            w-full items-center gap-2 border border-t-0 px-4 py-2 font-mono
+            text-sm"
+          href="/styles"
+        >
+          <span
+            class="text-accent group-hover:text-accent-hover inline-block
+              translate-y-px text-lg"
+            role="presentation"
+            aria-hidden="true">᠅</span
+          >
+          <span class="group-hover:underline">View design system</span></a
+        >
+
+        <a
           class="text-emphasis border-faint hover:text-accent-hover group mb-8
             flex w-full items-center gap-2 border border-t-0 px-4 py-2 font-mono
             text-sm"
@@ -147,8 +162,8 @@ import HeadingSection from "./HeadingSection.astro";
         >
 
         <!-- Copyright -->
-        <p class="mt-auto mb-0 pr-4 text-base">
-          <span class="inline-block">© 12026 HE</span>
+        <p class="mt-auto mb-0 pr-2 text-right text-base font-extralight">
+          © 12026 HE
         </p>
       </div>
     </div>
