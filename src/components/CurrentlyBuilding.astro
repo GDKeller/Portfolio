@@ -187,16 +187,14 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
                         {data.title}
                       </h3>
                       <div
-                        class="before:border-accent-subtle relative mt-2 flex
-                          w-full justify-between pr-2 before:absolute
-                          before:top-0 before:left-0 before:h-0 before:w-full
-                          before:border-t before:bg-none before:content-['']"
+                        class="border-accent relative mt-2 flex w-full
+                          justify-between border-t pr-2"
                       >
                         {data.type && (
                           <span
-                            class="text-emphasis project__type text-2xs relative
-                              z-110 mb-auto pt-1 pr-2 pb-2 pl-2 font-mono
-                              leading-none tracking-widest lg:pr-8 lg:pl-4
+                            class="text-background-dark project__type text-2xs
+                              relative z-110 pt-2 pr-1 pb-2 pl-2 font-mono
+                              leading-none tracking-widest lg:pr-7 lg:pl-3
                               lg:text-xs"
                           >
                             {data.type}
@@ -204,7 +202,7 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
                         )}
                         {data.tech && data.tech.length > 0 && (
                           <p
-                            class="text-2xs text-emphasis relative z-110 py-2
+                            class="text-2xs text-emphasis relative z-110 pt-2
                               font-mono font-extralight tracking-wide uppercase
                               lg:text-xs"
                           >
@@ -466,7 +464,7 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
           clip-path: polygon(
             0 0,
             100% 0,
-            100% calc(100% - 1.3rem),
+            100% calc(100% - 1.75rem),
             calc(100% - 1rem) 100%,
             0 100%
           );
@@ -478,7 +476,7 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
         position: absolute;
         inset: 0;
         z-index: -1;
-        background: var(--color-background-dark);
+        background: var(--color-accent);
 
         @media (min-width: 1024px) {
           clip-path: polygon(
