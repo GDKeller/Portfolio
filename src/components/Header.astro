@@ -112,6 +112,8 @@ import { RESUME_HREF } from "../lib/site-links";
         <button
           data-open-modal="hire_me_modal"
           aria-label="Contact"
+          aria-expanded="false"
+          aria-controls="hire_me_modal"
           class="text-background-dark bg-emphasis hover:bg-highlight
             focus-visible:bg-highlight relative my-0.5 hidden items-center px-6
             py-2 font-mono text-xs tracking-wide transition-colors duration-150
@@ -122,8 +124,10 @@ import { RESUME_HREF } from "../lib/site-links";
         <button
           data-open-modal="mobile_menu"
           aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="mobile_menu"
           class="text-background-dark bg-emphasis hover:bg-highlight
-            focus-visible:bg-highlight relative flex h-10 w-10 items-center
+            focus-visible:bg-highlight relative flex h-11 w-11 items-center
             justify-center transition-colors duration-150 hover:cursor-pointer
             focus-visible:z-1 sm:hidden"
         >
