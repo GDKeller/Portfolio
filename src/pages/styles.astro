@@ -19,23 +19,72 @@ const headingCombos = [
   ["line", "glow", "inverted"],
 ] as const;
 
-// Pulled directly from src/styles/main.css. Keep in sync when adding tokens.
-const colorTokens = [
-  { name: "background", group: "structural" },
-  { name: "background-dark", group: "structural" },
-  // Non-interactive singles first so base+hover pairs land on even-column starts.
-  { name: "foundation", group: "attention" },
-  { name: "accent-subtle", group: "attention" },
-  { name: "faint", group: "attention" },
-  { name: "fainter", group: "attention" },
-  { name: "emphasis", group: "attention" },
-  { name: "emphasis-hover", group: "attention" },
-  { name: "accent", group: "attention" },
-  { name: "accent-hover", group: "attention" },
-  { name: "highlight", group: "attention" },
-  { name: "highlight-hover", group: "attention" },
-  { name: "undertone", group: "structural" },
+type HeadingLineModifier = {
+  label: string;
+  treatment: "line" | ("line" | "inverted" | "bordered")[];
+  lineColor?: "emphasis";
+  lineFlush?: boolean;
+};
+
+const headingLineModifiers: HeadingLineModifier[] = [
+  {
+    label: 'lineColor: "emphasis"',
+    treatment: "line",
+    lineColor: "emphasis",
+  },
+  {
+    label: "lineFlush: true",
+    treatment: "line",
+    lineFlush: true,
+  },
+  {
+    label: "treatment: [line, inverted] · lineFlush: true",
+    treatment: ["line", "inverted"],
+    lineFlush: true,
+  },
+  {
+    label: "treatment: [line, bordered] · lineFlush: true",
+    treatment: ["line", "bordered"],
+    lineFlush: true,
+  },
+  {
+    label:
+      'treatment: [line, bordered] · lineColor: "emphasis" · lineFlush: true',
+    treatment: ["line", "bordered"],
+    lineColor: "emphasis",
+    lineFlush: true,
+  },
+  {
+    label:
+      'treatment: [line, inverted] · lineColor: "emphasis" · lineFlush: true',
+    treatment: ["line", "inverted"],
+    lineColor: "emphasis",
+    lineFlush: true,
+  },
 ];
+
+// Pulled directly from src/styles/theme.css. Keep in sync when adding tokens.
+const colorTokens = [
+  {
+    group: "structural",
+    tokens: ["background", "background-dark", "foundation"],
+  },
+  {
+    group: "emphasis",
+    tokens: ["emphasis", "emphasis-hover", "faint", "fainter"],
+  },
+  {
+    group: "accent",
+    tokens: ["accent", "accent-hover", "accent-subtle"],
+  },
+  { group: "highlight", tokens: ["highlight", "highlight-hover"] },
+  { group: "extra", tokens: ["undertone"] },
+];
+
+const totalColorTokens = colorTokens.reduce(
+  (sum, g) => sum + g.tokens.length,
+  0,
+);
 
 const fontTokens = [
   { name: "display", label: "Prompt", role: "Display" },
@@ -68,89 +117,92 @@ const textSizes = [
   { name: "9xl" },
 ];
 
-const groupLabels: Record<string, string> = {
-  attention: "Attention hierarchy",
-  structural: "Structural",
+const toSentenceCase = (text: string): string => {
+  if (!text) return "";
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 };
-
-const groupedColors = Object.keys(groupLabels).map((group) => ({
-  group,
-  label: groupLabels[group],
-  tokens: colorTokens.filter((t) => t.group === group),
-}));
 ---
 
-<Layout title="Style Reference — Grant Keller">
+<Layout title="Styles & Design System — Grant Keller's Portfolio">
   <main
-    class="bg-background-dark text-foundation min-h-screen px-6 pt-16 pb-32
-      md:px-12 lg:px-20"
+    class="bg-background-dark text-foundation min-h-screen overflow-hidden px-6
+      pt-4 pb-32 md:px-12 lg:px-20"
   >
     <header
-      class="border-faint mx-auto mb-16 flex max-w-6xl items-end border-b pb-6"
+      class="border-fainter mx-auto mb-24 flex max-w-6xl items-end border-b
+        pb-12"
     >
-      <div class="mr-auto">
-        <p class="text-faint text-2xs font-mono tracking-widest uppercase">
-          Style Reference ::: Design Tokens
-        </p>
+      <div class="mr-auto flex flex-col items-start">
         <h1
-          class="font-display text-foundation mt-4 text-6xl leading-none
-            tracking-tight md:text-7xl"
+          class="font-display text-emphasis order-2 mb-8 text-6xl font-black
+            tracking-wider md:text-7xl"
         >
-          Style Reference
+          Styles & Design System
         </h1>
+
+        <p class="order-3">
+          Description of the purpose of this page and the overall design system
+          goes here.
+        </p>
+        <a
+          href="/"
+          class="text-accent border-accent hover:bg-accent text-2xs order-1
+            mb-24 border-b px-4 py-2 font-mono tracking-widest uppercase
+            transition-colors hover:text-black"
+        >
+          &larr; Return to Site
+        </a>
       </div>
-      <a
-        href="/"
-        class="text-accent border-accent hover:bg-accent border-y px-4 py-2
-          font-mono text-xs tracking-widest uppercase transition-colors
-          hover:text-black"
-      >
-        &larr; Return to Dossier
-      </a>
     </header>
 
-    <div class="mx-auto max-w-6xl space-y-24">
+    <div class="mx-auto max-w-6xl">
       <!-- COLORS -->
-      <section aria-labelledby="colors-heading">
-        <div class="mb-8 flex items-baseline gap-4">
-          <h2
-            id="colors-heading"
-            class="font-display text-emphasis text-4xl leading-none
-              tracking-tight md:text-4xl"
-          >
+      <section
+        aria-labelledby="colors-heading"
+        class="border-fainter mb-32 border-b pb-16"
+      >
+        <div class="text-emphasis mb-8 flex items-baseline gap-8">
+          <h2 id="colors-heading" class="font-display text-4xl md:text-5xl">
             Color
           </h2>
-          <span class="text-faint font-mono text-xs tracking-widest uppercase">
-            {colorTokens.length} tokens
+          <span
+            class="text-background-dark bg-emphasis px-2 py-1 font-mono text-xs
+              tracking-widest"
+          >
+            {totalColorTokens} tokens
           </span>
+        </div>
+        <div class="mb-24">
+          <p>A description of the color system goes here.</p>
         </div>
 
         {
-          groupedColors.map((g) => (
+          colorTokens.map((g) => (
             <div class="mb-12">
-              <h3
-                class="text-emphasis mb-4 font-mono text-xs tracking-widest
-                  uppercase"
-              >
-                {g.label}
-              </h3>
+              <h3 class="text-emphasis mb-4 font-mono text-base">{toSentenceCase(g.group)}</h3>
               <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                {g.tokens.map((t) => (
-                  <div class="group relative flex items-stretch">
+                {g.tokens.map((name) => (
+                  <div class="group relative flex flex-col items-stretch">
                     <div
-                      class="h-20 w-20 shrink-0"
-                      style={`background-color: var(--color-${t.name});`}
+                      class="h-32 w-full shrink-0 border"
+                      style={`background-color: var(--color-${name});`}
                     />
                     <div class="flex flex-col justify-center px-4 py-3">
+                      <var
+                        class="text-foundation mb-2 font-mono text-base
+                          leading-tight"
+                      >
+                        --color-{name}
+                      </var>
                       <code
                         class="text-foundation font-mono text-sm leading-tight"
+                        data-color-value={name}
                       >
-                        --color-{t.name}
+                        …
                       </code>
                       <code
-                        class="text-foundation text-2xs mt-1 font-mono
-                          leading-tight"
-                        data-color-value={t.name}
+                        class="text-foundation mt-1 font-mono text-xs leading-tight"
+                        data-color-hex={name}
                       >
                         …
                       </code>
@@ -164,47 +216,87 @@ const groupedColors = Object.keys(groupLabels).map((group) => ({
       </section>
 
       <!-- FONTS -->
-      <section aria-labelledby="fonts-heading">
-        <div class="mb-8 flex items-baseline gap-4">
+      <section
+        aria-labelledby="fonts-heading"
+        class="border-fainter mb-32 border-b pb-16"
+      >
+        <div class="mb-8 flex items-baseline gap-8">
           <h2
             id="fonts-heading"
-            class="font-display text-emphasis text-4xl leading-none
-              tracking-tight md:text-4xl"
+            class="font-display text-emphasis text-4xl md:text-5xl"
           >
             Typography
           </h2>
-          <span class="text-faint text-2xs font-mono tracking-widest uppercase">
+          <span
+            class="bg-emphasis text-background-dark px-2 py-1 font-mono text-xs"
+          >
             {fontTokens.length} families
           </span>
         </div>
+        <div class="mb-24">
+          <p>Description of the type system goes here.</p>
+          <p>
+            Sample sentence is size <code class="bg-accent/20 ml-2 px-2"
+              >text-5xl md:text-6xl</code
+            >
+          </p>
+          <p>
+            Sample glyphs are size <code class="bg-accent/20 ml-2 px-2"
+              >text-4xl</code
+            >
+          </p>
+          <p></p>
+        </div>
 
-        <div class="space-y-6">
+        <div>
           {
-            fontTokens.map((f) => (
-              <div class="border-emphasis/20 border-b pb-6">
-                <div class="mb-3 flex items-baseline gap-4">
-                  <code class="text-foundation font-mono text-sm">
-                    --font-{f.name}
-                  </code>
-                  <span
-                    class="text-emphasis text-2xs font-mono tracking-widest
-                      uppercase"
+            fontTokens.map((font, index) => (
+              <div
+                class:list={[
+                  "mb-24",
+                  index !== fontTokens.length - 1 &&
+                    "border-fainter/20 border-b pb-24",
+                ]}
+              >
+                <div class="mb-8 flex items-baseline gap-16">
+                  <p
+                    class="text-emphasis flex items-baseline font-mono
+                      text-base"
                   >
-                    {f.label} / {f.role}
-                  </span>
+                    <span class="text-accent uppercase">Role:&nbsp;</span>
+                    {font.role}
+                  </p>
+                  <p
+                    class="text-emphasis flex items-baseline font-mono
+                      text-base"
+                  >
+                    <span class="text-accent uppercase">Typeface:&nbsp;</span>
+                    {font.label}
+                  </p>
+                  <p
+                    class="text-emphasis flex items-baseline font-mono
+                      text-base"
+                  >
+                    <span class="text-accent uppercase">Token:&nbsp;</span>
+                    <span class="font-mono">--font-{font.name}</span>
+                  </p>
                 </div>
                 <p
-                  class="text-foundation text-5xl leading-tight md:text-6xl"
-                  style={`font-family: var(--font-${f.name});`}
+                  class="text-foundation mb-12 text-5xl md:text-6xl"
+                  style={`font-family: var(--font-${font.name});`}
                 >
-                  The quick brown fox jumps over the lazy dog.
+                  The sky above the port was the color of television, tuned to a
+                  dead channel.
                 </p>
                 <p
-                  class="text-faint mt-2 text-2xl"
-                  style={`font-family: var(--font-${f.name});`}
+                  class="text-emphasis tracking-huge text-4xl leading-tight"
+                  style={`font-family: var(--font-${font.name});`}
                 >
-                  ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz
-                  0123456789 ᠅
+                  <span class="block">ABCDEFGHIJKLMNOPQRSTUVWXYZ</span>
+                  <span class="block">abcdefghijklmnopqrstuvwxyz</span>
+                  <span class="block">
+                    0123456789 <span class="triplecolon">:::</span> ᠅
+                  </span>
                 </p>
               </div>
             ))
@@ -213,50 +305,66 @@ const groupedColors = Object.keys(groupLabels).map((group) => ({
       </section>
 
       <!-- TYPE SCALE -->
-      <section aria-labelledby="scale-heading">
-        <div class="mb-8 flex items-baseline gap-4">
+      <section
+        aria-labelledby="scale-heading"
+        class="border-fainter mb-32 border-b pb-32"
+      >
+        <div class="mb-8 flex items-baseline gap-8">
           <h2
             id="scale-heading"
-            class="font-display text-emphasis text-4xl leading-none
-              tracking-tight md:text-4xl"
+            class="font-display text-emphasis text-4xl md:text-5xl"
           >
             Type Scale
           </h2>
-          <span class="text-faint font-mono text-xs tracking-widest uppercase">
+          <span
+            class="bg-emphasis text-background-dark px-2 py-1 font-mono text-xs
+              tracking-widest"
+          >
             {textSizes.length} sizes
           </span>
         </div>
+        <div class="mb-24">
+          <p>Description of the type scale goes here.</p>
+        </div>
 
-        <div class="space-y-4">
+        <div>
           {
-            textSizes.map((t) => (
-              <div class="border-faint flex items-baseline gap-6 border-b pb-4">
-                <div class="w-40 shrink-0">
-                  <code class="text-foundation font-mono text-sm leading-tight">
-                    text-{t.name}
-                  </code>
-                  {t.custom && (
-                    <span
-                      class="text-highlight text-2xs ml-2 font-mono
-                        tracking-widest uppercase"
-                    >
-                      custom
-                    </span>
-                  )}
-                  <code
-                    class="text-faint mt-1 block font-mono text-xs
-                      leading-tight"
+            textSizes.map((t, index) => (
+              <div
+                class:list={[
+                  "grid grid-cols-[2fr_3fr] items-center gap-8",
+                  index !== textSizes.length - 1 &&
+                    "border-fainter/20 mb-2 border-b pb-2",
+                ]}
+              >
+                <div class="grid shrink grid-cols-[1fr_1fr] gap-4">
+                  <p
+                    class="text-foundation grid grid-cols-2 items-baseline gap-4
+                      font-mono text-base"
+                  >
+                    <span class="block">text-{t.name}</span>
+                    {t.custom && (
+                      <span
+                        class="text-accent font-mono text-xs tracking-widest
+                          uppercase"
+                      >
+                        custom
+                      </span>
+                    )}
+                  </p>
+                  <p
+                    class="text-emphasis block font-mono text-sm"
                     data-text-value={t.name}
                   >
                     …
-                  </code>
+                  </p>
                 </div>
-                <div
-                  class="text-foundation font-display leading-none"
+                <p
+                  class="text-foundation font-display grow leading-[0.8em]"
                   style={`font-size: var(--text-${t.name});`}
                 >
                   Aa
-                </div>
+                </p>
               </div>
             ))
           }
@@ -265,47 +373,71 @@ const groupedColors = Object.keys(groupLabels).map((group) => ({
 
       <!-- SECTION HEADINGS -->
       <section aria-labelledby="headings-heading">
-        <div class="mb-8 flex items-baseline gap-4">
+        <div class="mb-8 flex items-baseline gap-8">
           <h2
             id="headings-heading"
-            class="font-display text-emphasis text-4xl leading-none
-              tracking-tight md:text-4xl"
+            class="font-display text-emphasis text-4xl md:text-5xl"
           >
             Section Headings
           </h2>
-          <span class="text-faint font-mono text-xs tracking-widest uppercase">
+          <span
+            class="bg-emphasis text-background-dark px-2 py-1 font-mono text-xs
+              tracking-widest"
+          >
             {headingTreatments.length} treatments · {headingAligns.length} alignments
             · {headingSizes.length} sizes
           </span>
         </div>
+        <div class="mb-24">
+          <p>Description of the heading system goes here.</p>
+        </div>
 
         <!-- Treatments × alignments at size: md -->
-        <div class="mb-16">
-          <h3
-            class="text-emphasis mb-6 font-mono text-xs tracking-widest
-              uppercase"
-          >
+        <div class="border-fainter/25 mb-48 border-b">
+          <h3 class="text-emphasis mb-12 font-mono text-2xl font-light">
             Treatments × Alignments (size: md)
           </h3>
-          <div class="space-y-12">
+          <div>
             {
               headingTreatments.map((treatment) => (
-                <div class="border-faint border-b pb-12">
-                  <code
-                    class="text-faint mb-8 block font-mono text-xs tracking-widest
-                      uppercase"
-                  >
-                    treatment: {treatment}
-                  </code>
-                  <div class="space-y-10">
-                    {headingAligns.map((align) => (
-                      <div>
-                        <code
-                          class="text-fainter text-2xs mb-4 block font-mono
-                            tracking-widest uppercase"
+                <div class="mb-32">
+                  <div class="border-fainter/30 mb-8 flex flex-col border-b">
+                    <h4
+                      class="text-foundation border-fainter/30 mr-auto border
+                        border-b-0 py-2 pl-1 font-mono text-base font-bold"
+                    >
+                      <>
+                        <span
+                          class="text-emphasis bg-background-dark py-1 pl-2
+                            uppercase"
                         >
-                          align: {align}
-                        </code>
+                          Treatment:&nbsp;
+                        </span>
+                        <span
+                          class="text-foundation bg-background-dark py-1 pr-4"
+                        >
+                          {toSentenceCase(treatment)}
+                        </span>
+                      </>
+                    </h4>
+                  </div>
+                  <div>
+                    {headingAligns.map((align) => (
+                      <div class="mb-32 flex flex-col overflow-hidden">
+                        <h5
+                          class="text-foundation relative mr-auto mb-8 block
+                            font-mono text-sm whitespace-nowrap"
+                        >
+                          <span class="triplecolon text-accent">:::</span>
+                          <span class="text-emphasis mr-auto uppercase">
+                            Align:&nbsp;
+                          </span>
+                          {toSentenceCase(align)}
+                          <span
+                            class="pattern-dots absolute top-1/2 left-full ml-4
+                              block h-1 w-dvw -translate-y-1/2 opacity-30"
+                          />
+                        </h5>
                         <HeadingSection
                           text="Section Heading"
                           as="p"
@@ -323,23 +455,34 @@ const groupedColors = Object.keys(groupLabels).map((group) => ({
         </div>
 
         <!-- Sizes at treatment: none, align: center -->
-        <div>
-          <h3
-            class="text-emphasis mb-6 font-mono text-xs tracking-widest
-              uppercase"
-          >
+        <div class="border-fainter/25 mb-48 border-b">
+          <h3 class="text-emphasis mb-12 font-mono text-2xl font-light">
             Sizes (treatment: none, align: center)
           </h3>
-          <div class="space-y-12">
+          <div>
             {
               headingSizes.map((size) => (
-                <div class="border-faint border-b pb-12">
-                  <code
-                    class="text-faint mb-6 block font-mono text-xs tracking-widest
-                      uppercase"
-                  >
-                    size: {size}
-                  </code>
+                <div class="mb-32">
+                  <div class="border-fainter/30 mb-8 flex flex-col border-b">
+                    <h4
+                      class="text-foundation border-fainter/30 mr-auto border
+                        border-b-0 py-2 pl-1 font-mono text-base font-bold"
+                    >
+                      <>
+                        <span
+                          class="text-emphasis bg-background-dark py-1 pl-2
+                            uppercase"
+                        >
+                          Size:&nbsp;
+                        </span>
+                        <span
+                          class="text-foundation bg-background-dark py-1 pr-4"
+                        >
+                          {size}
+                        </span>
+                      </>
+                    </h4>
+                  </div>
                   <HeadingSection
                     text="Section Heading"
                     as="p"
@@ -354,32 +497,51 @@ const groupedColors = Object.keys(groupLabels).map((group) => ({
         </div>
 
         <!-- Composed treatments at size: md, both alignments -->
-        <div class="mt-16">
-          <h3
-            class="text-emphasis mb-6 font-mono text-xs tracking-widest
-              uppercase"
-          >
+        <div class="border-fainter/25 mb-48 border-b">
+          <h3 class="text-emphasis mb-12 font-mono text-2xl font-light">
             Composed Treatments (size: md)
           </h3>
-          <div class="space-y-12">
+          <div>
             {
               headingCombos.map((combo) => (
-                <div class="border-faint border-b pb-12">
-                  <code
-                    class="text-faint mb-8 block font-mono text-xs tracking-widest
-                      uppercase"
-                  >
-                    treatment: [{combo.join(", ")}]
-                  </code>
-                  <div class="space-y-10">
-                    {headingAligns.map((align) => (
-                      <div>
-                        <code
-                          class="text-fainter text-2xs mb-4 block font-mono
-                            tracking-widest uppercase"
+                <div class="mb-32">
+                  <div class="border-fainter/30 mb-8 flex flex-col border-b">
+                    <h4
+                      class="text-foundation border-fainter/30 mr-auto border
+                        border-b-0 py-2 pl-1 font-mono text-base font-bold"
+                    >
+                      <>
+                        <span
+                          class="text-emphasis bg-background-dark py-1 pl-2
+                            uppercase"
                         >
-                          align: {align}
-                        </code>
+                          Treatment:&nbsp;
+                        </span>
+                        <span
+                          class="text-foundation bg-background-dark py-1 pr-4"
+                        >
+                          [{combo.join(", ")}]
+                        </span>
+                      </>
+                    </h4>
+                  </div>
+                  <div>
+                    {headingAligns.map((align) => (
+                      <div class="mb-32 flex flex-col overflow-hidden">
+                        <h5
+                          class="text-foundation relative mr-auto mb-8 block
+                            font-mono text-sm whitespace-nowrap"
+                        >
+                          <span class="triplecolon text-accent">:::</span>
+                          <span class="text-emphasis mr-auto uppercase">
+                            Align:&nbsp;
+                          </span>
+                          {toSentenceCase(align)}
+                          <span
+                            class="pattern-dots absolute top-1/2 left-full ml-4
+                              block h-1 w-dvw -translate-y-1/2 opacity-30"
+                          />
+                        </h5>
                         <HeadingSection
                           text="Section Heading"
                           as="p"
@@ -397,106 +559,45 @@ const groupedColors = Object.keys(groupLabels).map((group) => ({
         </div>
 
         <!-- Line treatment modifiers -->
-        <div class="mt-16">
-          <h3
-            class="text-emphasis mb-6 font-mono text-xs tracking-widest
-              uppercase"
-          >
+        <div class="border-fainter/25 mb-48 border-b">
+          <h3 class="text-emphasis mb-12 font-mono text-2xl font-light">
             Line Modifiers (size: md, align: center)
           </h3>
-          <div class="space-y-12">
-            <div class="border-faint border-b pb-12">
-              <code
-                class="text-faint mb-6 block font-mono text-xs tracking-widest
-                  uppercase"
-              >
-                lineColor: "emphasis"
-              </code>
-              <HeadingSection
-                text="Section Heading"
-                as="p"
-                size="md"
-                treatment="line"
-                lineColor="emphasis"
-              />
-            </div>
-            <div class="border-faint border-b pb-12">
-              <code
-                class="text-faint mb-6 block font-mono text-xs tracking-widest
-                  uppercase"
-              >
-                lineFlush: true
-              </code>
-              <HeadingSection
-                text="Section Heading"
-                as="p"
-                size="md"
-                treatment="line"
-                lineFlush={true}
-              />
-            </div>
-            <div class="border-faint border-b pb-12">
-              <code
-                class="text-faint mb-6 block font-mono text-xs tracking-widest
-                  uppercase"
-              >
-                treatment: [line, inverted] · lineFlush: true
-              </code>
-              <HeadingSection
-                text="Section Heading"
-                as="p"
-                size="md"
-                treatment={["line", "inverted"]}
-                lineFlush={true}
-              />
-            </div>
-            <div class="border-faint border-b pb-12">
-              <code
-                class="text-faint mb-6 block font-mono text-xs tracking-widest
-                  uppercase"
-              >
-                treatment: [line, bordered] · lineFlush: true
-              </code>
-              <HeadingSection
-                text="Section Heading"
-                as="p"
-                size="md"
-                treatment={["line", "bordered"]}
-                lineFlush={true}
-              />
-            </div>
-            <div class="border-faint border-b pb-12">
-              <code
-                class="text-faint mb-6 block font-mono text-xs tracking-widest
-                  uppercase"
-              >
-                treatment: [line, bordered] · lineColor: "emphasis" · lineFlush: true
-              </code>
-              <HeadingSection
-                text="Section Heading"
-                as="p"
-                size="md"
-                treatment={["line", "bordered"]}
-                lineColor="emphasis"
-                lineFlush={true}
-              />
-            </div>
-            <div class="border-faint border-b pb-12">
-              <code
-                class="text-faint mb-6 block font-mono text-xs tracking-widest
-                  uppercase"
-              >
-                treatment: [line, inverted] · lineColor: "emphasis" · lineFlush: true
-              </code>
-              <HeadingSection
-                text="Section Heading"
-                as="p"
-                size="md"
-                treatment={["line", "inverted"]}
-                lineColor="emphasis"
-                lineFlush={true}
-              />
-            </div>
+          <div>
+            {
+              headingLineModifiers.map((mod) => (
+                <div class="mb-32">
+                  <div class="border-fainter/30 mb-8 flex flex-col border-b">
+                    <h4
+                      class="text-foundation border-fainter/30 mr-auto border
+                        border-b-0 py-2 pl-1 font-mono text-base font-bold"
+                    >
+                      <>
+                        <span
+                          class="text-emphasis bg-background-dark py-1 pl-2
+                            uppercase"
+                        >
+                          Config:&nbsp;
+                        </span>
+                        <span
+                          class="text-foundation bg-background-dark py-1 pr-4"
+                        >
+                          {mod.label}
+                        </span>
+                      </>
+                    </h4>
+                  </div>
+                  <HeadingSection
+                    text="Section Heading"
+                    as="p"
+                    size="md"
+                    treatment={mod.treatment}
+                    lineColor={mod.lineColor}
+                    lineFlush={mod.lineFlush}
+                  />
+                </div>
+              ))
+            }
           </div>
         </div>
       </section>
@@ -521,11 +622,36 @@ const groupedColors = Object.keys(groupLabels).map((group) => ({
       return null;
     };
 
+    // Use a 1x1 canvas to convert any CSS color (oklch, color(), etc.) to sRGB
+    // hex. Painting forces gamut mapping, so the hex matches what the browser
+    // actually renders on this display.
+    const probeCanvas = document.createElement("canvas");
+    probeCanvas.width = 1;
+    probeCanvas.height = 1;
+    const probeCtx = probeCanvas.getContext("2d", { willReadFrequently: true });
+    const toHex = (cssColor: string) => {
+      if (!probeCtx || !cssColor || cssColor === "(unset)") return "";
+      probeCtx.clearRect(0, 0, 1, 1);
+      probeCtx.fillStyle = cssColor;
+      probeCtx.fillRect(0, 0, 1, 1);
+      const [r, g, b] = probeCtx.getImageData(0, 0, 1, 1).data;
+      return (
+        "#" +
+        [r, g, b].map((n) => n.toString(16).padStart(2, "0")).join("")
+      );
+    };
+
     for (const node of document.querySelectorAll<HTMLElement>(
       "[data-color-value]",
     )) {
       const token = node.dataset.colorValue;
       if (token) node.textContent = resolve("--color-", token);
+    }
+    for (const node of document.querySelectorAll<HTMLElement>(
+      "[data-color-hex]",
+    )) {
+      const token = node.dataset.colorHex;
+      if (token) node.textContent = toHex(resolve("--color-", token));
     }
     for (const node of document.querySelectorAll<HTMLElement>(
       "[data-text-value]",
