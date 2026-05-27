@@ -75,8 +75,8 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
   </div>
 
   <div
-    class="relative mx-auto max-w-7xl px-2 pt-16 pb-24 sm:px-4 md:px-8 md:pt-20
-      md:pb-28"
+    class="relative mx-auto max-w-7xl px-2 pt-16 pb-24 sm:px-4 md:pt-20 md:pb-28
+      lg:px-8"
   >
     <div class="flex items-end">
       <HeadingSection
@@ -215,9 +215,9 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
                         {data.type && (
                           <span
                             class="text-background-dark project__type text-2xs
-                              relative z-110 pt-2 pr-2 pb-2 pl-2 font-mono
-                              leading-none tracking-widest lg:pr-7 lg:pl-3
-                              lg:text-xs"
+                              relative z-110 pt-2 pr-6 pb-2 pl-2 font-mono
+                              leading-none tracking-widest md:pr-3 lg:pr-6
+                              lg:pl-3 lg:text-xs"
                           >
                             {data.type}
                           </span>
@@ -225,7 +225,7 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
                         {data.tech && data.tech.length > 0 && (
                           <p
                             class="text-2xs text-emphasis relative z-110 pt-2
-                              font-mono font-extralight tracking-wide uppercase
+                              font-mono font-extralight tracking-wide
                               lg:text-xs"
                           >
                             {data.tech.map((t: string, i: number) => (
@@ -484,6 +484,7 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
       &::before {
         content: "";
         position: absolute;
+        display: none;
         top: 0;
         right: -1px;
         bottom: -1px;
@@ -508,8 +509,25 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
         inset: 0;
         z-index: -1;
         background: var(--color-accent);
+        clip-path: polygon(
+          0 0,
+          100% 0,
+          100% calc(100% - 3rem),
+          calc(100% - 1rem) 100%,
+          0 100%
+        );
 
-        @media (min-width: 1024px) {
+        @media screen and (min-width: 768px) {
+          clip-path: polygon(
+            0 0,
+            100% 0,
+            100% calc(100% - 3rem),
+            calc(100% - 0.5rem) 100%,
+            0 100%
+          );
+        }
+
+        @media screen and (min-width: 1024px) {
           clip-path: polygon(
             0 0,
             100% 0,
