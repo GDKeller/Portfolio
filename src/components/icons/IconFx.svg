@@ -1,13 +1,4 @@
----
-type Props = {
-  class?: string;
-};
-
-const { class: className } = Astro.props;
----
-
 <svg
-  class={className}
   viewBox="0 0 32 32"
   fill="currentColor"
   shape-rendering="crispEdges"

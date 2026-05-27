@@ -2,11 +2,11 @@
 import Link from "./Link.astro";
 import Nav from "./Nav.astro";
 import SimpleModeToggle from "./SimpleModeToggle.astro";
-import IconGitHub from "./icons/IconGitHub.astro";
-import IconLinkedIn from "./icons/IconLinkedIn.astro";
-import IconMenu from "./icons/IconMenu.astro";
-import arrowDown from "../images/icons/icon_arrow-down.png";
-import arrowUp from "../images/icons/icon_arrow-up.png";
+import IconGitHub from "./icons/IconGitHub.svg";
+import IconLinkedIn from "./icons/IconLinkedIn.svg";
+import IconMenu from "./icons/IconMenu.svg";
+import IconArrowDown from "./icons/IconArrowDown.svg";
+import IconArrowUp from "./icons/IconArrowUp.svg";
 import headshotDithered from "../images/headshots/grant-headshot-dithered.png";
 ---
 
@@ -25,16 +25,12 @@ import headshotDithered from "../images/headshots/grant-headshot-dithered.png";
         href="#building"
         aria-label="Scroll to next section"
         data-state="at-hero"
-        class="home-link focus-visible:bg-accent-hover bg-background-dark
-          relative hidden h-8 w-8 shrink-0 overflow-hidden focus-visible:z-1
-          sm:block"
+        class="home-link text-emphasis focus-visible:bg-accent-hover
+          focus-visible:text-background-dark bg-background-dark relative hidden
+          h-8 w-8 shrink-0 overflow-hidden focus-visible:z-1 sm:block"
       >
-        <img
-          src={arrowDown.src}
-          alt=""
-          width="32"
-          height="32"
-          class="home-link__icon home-link__icon--down absolute inset-0"
+        <IconArrowDown
+          class="home-link__icon home-link__icon--down absolute inset-0 h-8 w-8"
         />
         <img
           src={headshotDithered.src}
@@ -43,12 +39,8 @@ import headshotDithered from "../images/headshots/grant-headshot-dithered.png";
           height="32"
           class="home-link__icon home-link__icon--face absolute inset-0"
         />
-        <img
-          src={arrowUp.src}
-          alt=""
-          width="32"
-          height="32"
-          class="home-link__icon home-link__icon--up absolute inset-0"
+        <IconArrowUp
+          class="home-link__icon home-link__icon--up absolute inset-0 h-8 w-8"
         />
       </a>
       <SimpleModeToggle />
@@ -147,25 +139,23 @@ import headshotDithered from "../images/headshots/grant-headshot-dithered.png";
     outline-offset: 0px;
   }
 
-  .home-link__icon {
+  .home-link :global(.home-link__icon) {
     display: none;
   }
-  .home-link__icon--down,
-  .home-link__icon--up {
-    image-rendering: pixelated;
-  }
-  .home-link[data-state="at-hero"] .home-link__icon--down {
+  .home-link[data-state="at-hero"] :global(.home-link__icon--down) {
     display: block;
   }
-  .home-link[data-state="past-hero"] .home-link__icon--face {
+  .home-link[data-state="past-hero"] :global(.home-link__icon--face) {
     display: block;
   }
-  .home-link[data-state="past-hero"]:hover .home-link__icon--face,
-  .home-link[data-state="past-hero"]:focus-visible .home-link__icon--face {
+  .home-link[data-state="past-hero"]:hover :global(.home-link__icon--face),
+  .home-link[data-state="past-hero"]:focus-visible
+    :global(.home-link__icon--face) {
     display: none;
   }
-  .home-link[data-state="past-hero"]:hover .home-link__icon--up,
-  .home-link[data-state="past-hero"]:focus-visible .home-link__icon--up {
+  .home-link[data-state="past-hero"]:hover :global(.home-link__icon--up),
+  .home-link[data-state="past-hero"]:focus-visible
+    :global(.home-link__icon--up) {
     display: block;
   }
 </style>
