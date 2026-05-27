@@ -134,10 +134,10 @@ const toSentenceCase = (text: string): string => {
     >
       <div class="mr-auto flex flex-col items-start">
         <h1
-          class="font-display text-emphasis order-2 mb-8 text-6xl font-black
-            tracking-wider md:text-7xl"
+          class="font-display text-emphasis order-2 mb-8 text-4xl font-black
+            tracking-wider md:text-5xl lg:text-6xl xl:text-7xl"
         >
-          Styles & Design System
+          Styles & <span class="inline-block">Design System</span>
         </h1>
 
         <p class="order-3">
@@ -161,8 +161,11 @@ const toSentenceCase = (text: string): string => {
         aria-labelledby="colors-heading"
         class="border-fainter mb-32 border-b pb-16"
       >
-        <div class="text-emphasis mb-8 flex items-baseline gap-8">
-          <h2 id="colors-heading" class="font-display text-4xl md:text-5xl">
+        <div class="text-emphasis mb-8 flex items-end gap-8">
+          <h2
+            id="colors-heading"
+            class="font-display text-4xl leading-[0.7em] md:text-5xl"
+          >
             Color
           </h2>
           <span
@@ -172,22 +175,45 @@ const toSentenceCase = (text: string): string => {
             {totalColorTokens} tokens
           </span>
         </div>
-        <div class="mb-24">
+        <div class="mb-8">
           <p>A description of the color system goes here.</p>
+        </div>
+        <div
+          class="border-fainter mb-24 flex h-12 w-full overflow-hidden border
+            md:h-24"
+          aria-hidden="true"
+        >
+          {
+            [
+              "background",
+              "foundation",
+              "emphasis",
+              "faint",
+              "accent",
+              "highlight",
+            ].map((name) => (
+              <div
+                class="flex-1"
+                style={`background-color: var(--color-${name});`}
+              />
+            ))
+          }
         </div>
 
         {
           colorTokens.map((g) => (
             <div class="mb-12">
-              <h3 class="text-emphasis mb-4 font-mono text-base">{toSentenceCase(g.group)}</h3>
-              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              <h3 class="text-emphasis mb-4 font-mono text-base">
+                {toSentenceCase(g.group)}
+              </h3>
+              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {g.tokens.map((name) => (
                   <div class="group relative flex flex-col items-stretch">
                     <div
                       class="h-32 w-full shrink-0 border"
                       style={`background-color: var(--color-${name});`}
                     />
-                    <div class="flex flex-col justify-center px-4 py-3">
+                    <div class="flex flex-col justify-center py-3">
                       <var
                         class="text-foundation mb-2 font-mono text-base
                           leading-tight"
@@ -201,7 +227,8 @@ const toSentenceCase = (text: string): string => {
                         …
                       </code>
                       <code
-                        class="text-foundation mt-1 font-mono text-xs leading-tight"
+                        class="text-foundation mt-1 font-mono text-xs
+                          leading-tight"
                         data-color-hex={name}
                       >
                         …
@@ -220,10 +247,11 @@ const toSentenceCase = (text: string): string => {
         aria-labelledby="fonts-heading"
         class="border-fainter mb-32 border-b pb-16"
       >
-        <div class="mb-8 flex items-baseline gap-8">
+        <div class="mb-8 flex items-end gap-8">
           <h2
             id="fonts-heading"
-            class="font-display text-emphasis text-4xl md:text-5xl"
+            class="font-display text-emphasis text-4xl leading-[0.7em]
+              md:text-5xl"
           >
             Typography
           </h2>
@@ -233,19 +261,20 @@ const toSentenceCase = (text: string): string => {
             {fontTokens.length} families
           </span>
         </div>
-        <div class="mb-24">
+        <div class="mb-8">
           <p>Description of the type system goes here.</p>
-          <p>
-            Sample sentence is size <code class="bg-accent/20 ml-2 px-2"
+        </div>
+        <div class="mb-24 lg:flex lg:gap-12">
+          <p class="mb-2">
+            Sample sentence is size <code class="bg-accent/20 ml-1 px-2"
               >text-5xl md:text-6xl</code
             >
           </p>
           <p>
-            Sample glyphs are size <code class="bg-accent/20 ml-2 px-2"
+            Sample glyphs are size <code class="bg-accent/20 ml-1 px-2"
               >text-4xl</code
             >
           </p>
-          <p></p>
         </div>
 
         <div>
@@ -258,42 +287,46 @@ const toSentenceCase = (text: string): string => {
                     "border-fainter/20 border-b pb-24",
                 ]}
               >
-                <div class="mb-8 flex items-baseline gap-16">
+                <div
+                  class="mb-8 flex flex-col items-baseline gap-2 sm:flex-row
+                    sm:gap-12 md:gap-16"
+                >
                   <p
                     class="text-emphasis flex items-baseline font-mono
                       text-base"
                   >
-                    <span class="text-accent uppercase">Role:&nbsp;</span>
+                    <span class="text-accent">Role:&nbsp;</span>
                     {font.role}
                   </p>
                   <p
                     class="text-emphasis flex items-baseline font-mono
                       text-base"
                   >
-                    <span class="text-accent uppercase">Typeface:&nbsp;</span>
+                    <span class="text-accent">Typeface:&nbsp;</span>
                     {font.label}
                   </p>
                   <p
                     class="text-emphasis flex items-baseline font-mono
                       text-base"
                   >
-                    <span class="text-accent uppercase">Token:&nbsp;</span>
+                    <span class="text-accent">Token:&nbsp;</span>
                     <span class="font-mono">--font-{font.name}</span>
                   </p>
                 </div>
                 <p
-                  class="text-foundation mb-12 text-5xl md:text-6xl"
+                  class="text-foundation mb-16 text-2xl sm:text-4xl md:text-6xl"
                   style={`font-family: var(--font-${font.name});`}
                 >
                   The sky above the port was the color of television, tuned to a
                   dead channel.
                 </p>
                 <p
-                  class="text-emphasis tracking-huge text-4xl leading-tight"
+                  class="text-emphasis tracking-huge text-4xl leading-[0.9em]
+                    break-all"
                   style={`font-family: var(--font-${font.name});`}
                 >
-                  <span class="block">ABCDEFGHIJKLMNOPQRSTUVWXYZ</span>
-                  <span class="block">abcdefghijklmnopqrstuvwxyz</span>
+                  <span class="mb-4 block">ABCDEFGHIJKLMNOPQRSTUVWXYZ</span>
+                  <span class="mb-4 block">abcdefghijklmnopqrstuvwxyz</span>
                   <span class="block">
                     0123456789 <span class="triplecolon">:::</span> ᠅
                   </span>
@@ -309,10 +342,11 @@ const toSentenceCase = (text: string): string => {
         aria-labelledby="scale-heading"
         class="border-fainter mb-32 border-b pb-32"
       >
-        <div class="mb-8 flex items-baseline gap-8">
+        <div class="mb-8 flex items-end gap-8">
           <h2
             id="scale-heading"
-            class="font-display text-emphasis text-4xl md:text-5xl"
+            class="font-display text-emphasis text-4xl leading-[0.7em]
+              md:text-5xl"
           >
             Type Scale
           </h2>
@@ -345,10 +379,9 @@ const toSentenceCase = (text: string): string => {
                     <span class="block">text-{t.name}</span>
                     {t.custom && (
                       <span
-                        class="text-accent font-mono text-xs tracking-widest
-                          uppercase"
+                        class="text-accent font-mono text-xs tracking-widest"
                       >
-                        custom
+                        Custom
                       </span>
                     )}
                   </p>
@@ -373,10 +406,11 @@ const toSentenceCase = (text: string): string => {
 
       <!-- SECTION HEADINGS -->
       <section aria-labelledby="headings-heading">
-        <div class="mb-8 flex items-baseline gap-8">
+        <div class="mb-8 flex items-end gap-8">
           <h2
             id="headings-heading"
-            class="font-display text-emphasis text-4xl md:text-5xl"
+            class="font-display text-emphasis text-4xl leading-[0.7em]
+              md:text-5xl"
           >
             Section Headings
           </h2>
@@ -429,7 +463,7 @@ const toSentenceCase = (text: string): string => {
                             font-mono text-sm whitespace-nowrap"
                         >
                           <span class="triplecolon text-accent">:::</span>
-                          <span class="text-emphasis mr-auto uppercase">
+                          <span class="text-emphasis mr-auto">
                             Align:&nbsp;
                           </span>
                           {toSentenceCase(align)}
@@ -469,10 +503,7 @@ const toSentenceCase = (text: string): string => {
                         border-b-0 py-2 pl-1 font-mono text-base font-bold"
                     >
                       <>
-                        <span
-                          class="text-emphasis bg-background-dark py-1 pl-2
-                            uppercase"
-                        >
+                        <span class="text-emphasis bg-background-dark py-1 pl-2">
                           Size:&nbsp;
                         </span>
                         <span
@@ -533,7 +564,7 @@ const toSentenceCase = (text: string): string => {
                             font-mono text-sm whitespace-nowrap"
                         >
                           <span class="triplecolon text-accent">:::</span>
-                          <span class="text-emphasis mr-auto uppercase">
+                          <span class="text-emphasis mr-auto">
                             Align:&nbsp;
                           </span>
                           {toSentenceCase(align)}
@@ -573,10 +604,7 @@ const toSentenceCase = (text: string): string => {
                         border-b-0 py-2 pl-1 font-mono text-base font-bold"
                     >
                       <>
-                        <span
-                          class="text-emphasis bg-background-dark py-1 pl-2
-                            uppercase"
-                        >
+                        <span class="text-emphasis bg-background-dark py-1 pl-2">
                           Config:&nbsp;
                         </span>
                         <span
@@ -636,8 +664,7 @@ const toSentenceCase = (text: string): string => {
       probeCtx.fillRect(0, 0, 1, 1);
       const [r, g, b] = probeCtx.getImageData(0, 0, 1, 1).data;
       return (
-        "#" +
-        [r, g, b].map((n) => n.toString(16).padStart(2, "0")).join("")
+        "#" + [r, g, b].map((n) => n.toString(16).padStart(2, "0")).join("")
       );
     };
 
