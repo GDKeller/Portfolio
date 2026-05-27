@@ -2,6 +2,7 @@
 import IconArrowRight from "./icons/IconArrowRight.svg";
 import IconFileDownload from "./icons/IconFileDownload.svg";
 import HeadingSection from "./HeadingSection.astro";
+import { RESUME_HREF } from "../lib/site-links";
 ---
 
 <footer class="font-body">
@@ -24,7 +25,7 @@ import HeadingSection from "./HeadingSection.astro";
           >
             <div class="flex gap-2 transition-colors">
               <a
-                href="/Grant Keller Senior UX Engineer Resume 2025.pdf"
+                href={RESUME_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="text-accent-hover bg-background

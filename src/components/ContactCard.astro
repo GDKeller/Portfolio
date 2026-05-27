@@ -3,8 +3,8 @@ const email = "contact@grantkeller.dev";
 const linkedinHandle = "grantdkeller";
 const githubHandle = "gdkeller";
 const xHandle = "GrantDKeller";
-const resumeHref = "/Grant Keller Senior UX Engineer Resume 2025.pdf";
 
+import { RESUME_HREF } from "../lib/site-links";
 import IconArrowRight from "./icons/IconArrowRight.svg";
 import IconCopy from "./icons/IconCopy.svg";
 import IconDownload from "./icons/IconDownload.svg";
@@ -64,7 +64,7 @@ import IconX from "./icons/IconX.svg";
 
   <div class="border-faint relative z-10 border-t-2">
     <a
-      href={resumeHref}
+      href={RESUME_HREF}
       target="_blank"
       rel="noopener noreferrer"
       class="link-resume group text-emphasis hover:text-highlight-hover
