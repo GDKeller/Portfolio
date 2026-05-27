@@ -75,6 +75,7 @@ const current = defineCollection({
     type: z.string().optional(),
     description: z.string(),
     image: z.string().optional(),
+    imageRemote: z.url().optional(),
     imageAlt: z.string().optional(),
     video: z.string().optional(),
     tech: z.array(z.string()).optional(),

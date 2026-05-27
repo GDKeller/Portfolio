@@ -26,11 +26,24 @@ const statusLabel = {
 } as const;
 
 const items = await Promise.all(
-  entries.map(async (entry) => ({
-    entry,
-    image: await resolveImage(entry.data.image),
-    videoBase: entry.data.video?.replace(/\.[^/.]+$/, "") ?? null,
-  })),
+  entries.map(async (entry) => {
+    const image = await resolveImage(entry.data.image);
+    const hasRemote = Boolean(entry.data.imageRemote);
+    const [panelFallback, thumbFallback] =
+      hasRemote && image
+        ? await Promise.all([
+            getImage({ src: image, width: 1200, format: "webp" }),
+            getImage({ src: image, width: 400, format: "webp" }),
+          ])
+        : [null, null];
+    return {
+      entry,
+      image,
+      videoBase: entry.data.video?.replace(/\.[^/.]+$/, "") ?? null,
+      panelFallbackSrc: panelFallback?.src ?? null,
+      thumbFallbackSrc: thumbFallback?.src ?? null,
+    };
+  }),
 );
 
 // Pre-generate AVIF + WebP variants for the tile background so browsers can
@@ -102,7 +115,7 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
       <!-- Active viewer -->
       <div class="relative p-2 md:p-8">
         {
-          items.map(({ entry, image, videoBase }, idx) => {
+          items.map(({ entry, image, videoBase, panelFallbackSrc }, idx) => {
             const { data } = entry;
             return (
               <div class:list={[idx > 0 && "hidden"]} data-panel={entry.id}>
@@ -144,6 +157,15 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
                           />
                         </video>
                       </div>
+                    ) : data.imageRemote ? (
+                      <img
+                        src={data.imageRemote}
+                        alt={data.imageAlt ?? data.title}
+                        loading="lazy"
+                        data-fallback-src={panelFallbackSrc ?? undefined}
+                        class="relative z-110 h-full w-full object-cover
+                          object-center"
+                      />
                     ) : image ? (
                       <Picture
                         src={image}
@@ -193,7 +215,7 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
                         {data.type && (
                           <span
                             class="text-background-dark project__type text-2xs
-                              relative z-110 pt-2 pr-1 pb-2 pl-2 font-mono
+                              relative z-110 pt-2 pr-2 pb-2 pl-2 font-mono
                               leading-none tracking-widest lg:pr-7 lg:pl-3
                               lg:text-xs"
                           >
@@ -256,7 +278,7 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
           md:grid-cols-5 lg:gap-4 lg:p-8"
       >
         {
-          items.map(({ entry, image }, idx) => {
+          items.map(({ entry, image, thumbFallbackSrc }, idx) => {
             const { data } = entry;
             return (
               <button
@@ -270,7 +292,16 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
                 aria-label={`View ${data.title}`}
                 aria-pressed={idx === 0 ? "true" : "false"}
               >
-                {image ? (
+                {data.imageRemote ? (
+                  <img
+                    src={data.imageRemote}
+                    alt=""
+                    loading="lazy"
+                    data-fallback-src={thumbFallbackSrc ?? undefined}
+                    class="block w-1/3 origin-top object-cover object-center
+                      max-sm:h-12 sm:m-0 sm:aspect-16/10 sm:h-auto sm:w-full"
+                  />
+                ) : image ? (
                   <Picture
                     src={image}
                     alt=""
@@ -610,6 +641,21 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
   function initCurrentlyBuilding() {
     const root = document.querySelector<HTMLElement>("[data-builds]");
     if (!root) return;
+
+    root
+      .querySelectorAll<HTMLImageElement>("img[data-fallback-src]")
+      .forEach((img) => {
+        const fallback = img.dataset.fallbackSrc;
+        if (!fallback) return;
+        img.addEventListener(
+          "error",
+          () => {
+            if (img.src === fallback) return;
+            img.src = fallback;
+          },
+          { once: true },
+        );
+      });
 
     const panels = root.querySelectorAll<HTMLElement>("[data-panel]");
     const thumbs = root.querySelectorAll<HTMLButtonElement>("[data-thumb]");
