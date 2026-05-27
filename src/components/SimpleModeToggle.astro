@@ -10,8 +10,7 @@
  * The actual visual changes live in src/styles/simple-mode.css.
  */
 
-import IconEyeglasses from "./icons/IconEyeglasses.astro";
-import IconSunglasses from "./icons/IconSunglasses.astro";
+import IconFx from "./icons/IconFx.astro";
 ---
 
 <button
@@ -20,16 +19,18 @@ import IconSunglasses from "./icons/IconSunglasses.astro";
   aria-pressed="false"
   aria-label="Toggle visual effects"
   class="simple-mode-toggle group text-emphasis hover:text-background-dark
-    hover:bg-accent-hover aria-pressed:hover:bg-accent-hover
-    focus-visible:bg-accent-hover focus-visible:text-background-dark
-    hover:border-accent-hover border-faint bg-background-dark
-    aria-pressed:text-background-dark aria-pressed:bg-accent relative flex h-8
-    w-8 shrink-0 items-center justify-center self-center font-mono
-    transition-all duration-200 hover:cursor-pointer"
+    hover:bg-accent-hover focus-visible:bg-accent-hover
+    focus-visible:text-background-dark hover:border-accent-hover border-faint
+    bg-background-dark aria-pressed:text-fainter
+    aria-pressed:hover:bg-accent-hover aria-pressed:hover:text-background-dark
+    aria-pressed:focus-visible:bg-accent-hover
+    aria-pressed:focus-visible:text-background-dark relative flex h-8 w-8
+    shrink-0 items-center justify-center self-center font-mono transition-all
+    duration-200 hover:cursor-pointer"
 >
-  <IconEyeglasses class="icon-eyeglasses h-6 w-6" />
-  <IconSunglasses class="icon-sunglasses h-6 w-6" />
+  <IconFx class="h-6 w-6" />
   <span class="sr-only">Toggle effects</span>
+
   <span
     class="simple-mode-toggle__tooltip text-foundation bg-background-dark
       border-faint group-aria-pressed:border-emphasis
@@ -37,7 +38,8 @@ import IconSunglasses from "./icons/IconSunglasses.astro";
       top-full right-0 -z-1 w-49 origin-top scale-y-0 border px-4 py-4 font-mono
       text-sm tracking-wider opacity-0 shadow-lg shadow-black/40 transition
       duration-200 data-[placement=above]:top-auto
-      data-[placement=above]:bottom-full data-[placement=above]:origin-bottom
+      data-[placement=above]:bottom-full data-[placement=above]:mb-0.5
+      data-[placement=above]:origin-bottom data-[placement=below]:mt-0.5
       data-[show=true]:scale-y-100 data-[show=true]:opacity-100 sm:right-auto
       sm:-left-px md:w-66"
     data-simple-mode-tooltip
@@ -48,7 +50,7 @@ import IconSunglasses from "./icons/IconSunglasses.astro";
     <span data-when="off" class="bg-background-dark block text-left">
       <span
         class="text-emphasis relative mb-2 block text-xs uppercase md:text-base"
-        >Readable Mode: Off</span
+        >Effects: <span class="text-accent-hover">On</span></span
       >
       <span class="text-2xs relative block w-[28ch] md:text-xs"
         >Click to disable effects & complex fonts</span
@@ -56,121 +58,116 @@ import IconSunglasses from "./icons/IconSunglasses.astro";
     </span>
     <span data-when="on" class="bg-background-dark block text-left">
       <span class="text-emphasis mb-2 block text-xs uppercase md:text-base"
-        >Readable mode: <span class="text-accent-hover">On</span></span
+        >Effects: Off</span
       >
       <span class="text-2xs block w-[26ch] md:text-xs"
         >Click to enable effects & complex fonts</span
       >
     </span>
   </span>
-</button>
 
-<style>
-  .simple-mode-toggle[aria-pressed="false"] :global(.icon-sunglasses),
-  .simple-mode-toggle[aria-pressed="true"] :global(.icon-eyeglasses) {
-    display: none;
-  }
-
-  .simple-mode-toggle__tooltip[data-state="off"] [data-when="on"],
-  .simple-mode-toggle__tooltip[data-state="on"] [data-when="off"] {
-    display: none;
-  }
-</style>
-
-<script>
-  const STORAGE_KEY = "portfolio:simple-mode";
-
-  function readStored(): boolean {
-    try {
-      return localStorage.getItem(STORAGE_KEY) === "on";
-    } catch {
-      return false;
+  <style>
+    .simple-mode-toggle__tooltip[data-state="off"] [data-when="on"],
+    .simple-mode-toggle__tooltip[data-state="on"] [data-when="off"] {
+      display: none;
     }
-  }
+  </style>
 
-  function writeStored(on: boolean): void {
-    try {
-      if (on) {
-        localStorage.setItem(STORAGE_KEY, "on");
-      } else {
-        localStorage.removeItem(STORAGE_KEY);
+  <script>
+    const STORAGE_KEY = "portfolio:simple-mode";
+
+    function readStored(): boolean {
+      try {
+        return localStorage.getItem(STORAGE_KEY) === "on";
+      } catch {
+        return false;
       }
-    } catch {
-      // Safari Private Browsing or storage disabled — silently ignore.
     }
-  }
 
-  function applyState(on: boolean): void {
-    if (on) {
-      document.documentElement.dataset.simpleMode = "on";
-    } else {
-      delete document.documentElement.dataset.simpleMode;
+    function writeStored(on: boolean): void {
+      try {
+        if (on) {
+          localStorage.setItem(STORAGE_KEY, "on");
+        } else {
+          localStorage.removeItem(STORAGE_KEY);
+        }
+      } catch {
+        // Safari Private Browsing or storage disabled — silently ignore.
+      }
     }
-    document
-      .querySelectorAll<HTMLButtonElement>("[data-simple-mode-toggle]")
-      .forEach((btn) => {
-        btn.setAttribute("aria-pressed", on ? "true" : "false");
-      });
-    document
-      .querySelectorAll<HTMLElement>("[data-simple-mode-tooltip]")
-      .forEach((tip) => {
-        tip.dataset.state = on ? "on" : "off";
-      });
-  }
 
-  const buttons = document.querySelectorAll<HTMLButtonElement>(
-    "[data-simple-mode-toggle]",
-  );
+    function applyState(on: boolean): void {
+      if (on) {
+        document.documentElement.dataset.simpleMode = "on";
+      } else {
+        delete document.documentElement.dataset.simpleMode;
+      }
+      document
+        .querySelectorAll<HTMLButtonElement>("[data-simple-mode-toggle]")
+        .forEach((btn) => {
+          btn.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+      document
+        .querySelectorAll<HTMLElement>("[data-simple-mode-tooltip]")
+        .forEach((tip) => {
+          tip.dataset.state = on ? "on" : "off";
+        });
+    }
 
-  // Initialize aria-pressed from the actual document state (set pre-paint by
-  // Layout.astro's inline script). Do NOT re-read localStorage here — the
-  // dataset is the source of truth post-paint.
-  const initial = document.documentElement.dataset.simpleMode === "on";
-  buttons.forEach((btn) => {
-    btn.setAttribute("aria-pressed", initial ? "true" : "false");
-    btn.addEventListener("click", () => {
-      const next = document.documentElement.dataset.simpleMode !== "on";
-      applyState(next);
-      writeStored(next);
-      document.dispatchEvent(
-        new CustomEvent("simple-mode:change", { detail: { on: next } }),
-      );
+    const buttons = document.querySelectorAll<HTMLButtonElement>(
+      "[data-simple-mode-toggle]",
+    );
+
+    // Initialize aria-pressed from the actual document state (set pre-paint by
+    // Layout.astro's inline script). Do NOT re-read localStorage here — the
+    // dataset is the source of truth post-paint.
+    const initial = document.documentElement.dataset.simpleMode === "on";
+    buttons.forEach((btn) => {
+      btn.setAttribute("aria-pressed", initial ? "true" : "false");
+      btn.addEventListener("click", () => {
+        const next = document.documentElement.dataset.simpleMode !== "on";
+        applyState(next);
+        writeStored(next);
+        document.dispatchEvent(
+          new CustomEvent("simple-mode:change", { detail: { on: next } }),
+        );
+      });
     });
-  });
 
-  // Cross-tab sync: when another tab toggles, mirror the change here.
-  window.addEventListener("storage", (event) => {
-    if (event.key !== STORAGE_KEY) return;
-    applyState(readStored());
-  });
+    // Cross-tab sync: when another tab toggles, mirror the change here.
+    window.addEventListener("storage", (event) => {
+      if (event.key !== STORAGE_KEY) return;
+      applyState(readStored());
+    });
 
-  const tooltip = document.querySelector<HTMLElement>(
-    "[data-simple-mode-tooltip]",
-  );
+    const tooltip = document.querySelector<HTMLElement>(
+      "[data-simple-mode-tooltip]",
+    );
 
-  // Sync initial tooltip state with the button (set pre-paint).
-  if (tooltip) {
-    tooltip.dataset.state = initial ? "on" : "off";
-  }
+    // Sync initial tooltip state with the button (set pre-paint).
+    if (tooltip) {
+      tooltip.dataset.state = initial ? "on" : "off";
+    }
 
-  // Place above the button while the page is near the top, otherwise below.
-  // While near the top there's more empty atmosphere above; once scrolled,
-  // the sticky header has empty page space below it.
-  function showTooltip(): void {
-    if (!tooltip) return;
-    tooltip.dataset.placement = window.scrollY < 200 ? "above" : "below";
-    tooltip.dataset.show = "true";
-  }
+    // Place above the button while the page is near the top, otherwise below.
+    // While near the top there's more empty atmosphere above; once scrolled,
+    // the sticky header has empty page space below it.
+    function showTooltip(): void {
+      if (!tooltip) return;
+      tooltip.dataset.placement = window.scrollY < 200 ? "above" : "below";
+      tooltip.dataset.show = "true";
+    }
 
-  function hideTooltip(): void {
-    if (!tooltip) return;
-    delete tooltip.dataset.show;
-  }
+    function hideTooltip(): void {
+      if (!tooltip) return;
+      delete tooltip.dataset.show;
+    }
 
-  buttons.forEach((btn) => {
-    btn.addEventListener("mouseenter", showTooltip);
-    btn.addEventListener("mouseleave", hideTooltip);
-    btn.addEventListener("focus", showTooltip);
-    btn.addEventListener("blur", hideTooltip);
-  });
-</script>
+    buttons.forEach((btn) => {
+      btn.addEventListener("mouseenter", showTooltip);
+      btn.addEventListener("mouseleave", hideTooltip);
+      btn.addEventListener("focus", showTooltip);
+      btn.addEventListener("blur", hideTooltip);
+    });
+  </script>
+</button>
