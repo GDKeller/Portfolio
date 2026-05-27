@@ -12,6 +12,13 @@ html {
   scrollbar-gutter: stable;
 }
 
+/** Lock page scroll while any modal dialog is open. Mirrors the dialog-pause
+ *  selector in Overlays.astro so a single rule covers every dialog that uses
+ *  DialogShell. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
 /** Astro's <Picture> wraps the <img> in a <picture> for multi-format <source>
  *  negotiation. <picture> defaults to `display: inline`, which eats the
  *  layout slot the <img> is expected to fill (h-full / object-cover against a
