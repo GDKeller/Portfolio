@@ -143,6 +143,7 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
                           data-lazy-video
                           class="laptop-rounded-top block h-full w-full
                             object-cover object-top"
+                          style={data.focal ? `object-position: ${data.focal}` : undefined}
                           poster={image?.src}
                         >
                           <source
@@ -165,6 +166,7 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
                         data-fallback-src={panelFallbackSrc ?? undefined}
                         class="relative z-110 h-full w-full object-cover
                           object-center"
+                        style={data.focal ? `object-position: ${data.focal}` : undefined}
                       />
                     ) : image ? (
                       <Picture
@@ -178,6 +180,7 @@ const gridTileBg = `image-set(url("${gridTileAvif.src}") type("image/avif"), url
                         loading="lazy"
                         class="relative z-110 h-full w-full object-cover
                           object-top"
+                        style={data.focal ? `object-position: ${data.focal}` : undefined}
                       />
                     ) : (
                       <div

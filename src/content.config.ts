@@ -82,7 +82,7 @@ const current = defineCollection({
     status: z.enum(["live", "beta", "launching-soon"]).optional(),
     brand: z.enum(["davant"]).optional(),
     order: z.number().optional(),
-    focal: z.boolean().optional(),
+    focal: z.string().optional(),
   }),
 });
 
