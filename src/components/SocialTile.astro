@@ -1,0 +1,36 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  handle: string;
+  Icon: any;
+}
+
+const { href, label, handle, Icon } = Astro.props;
+---
+
+<li class="border-faint border-l-2 first:border-l-0">
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="contact-link group text-emphasis hover:bg-accent-hover
+      hover:text-background-dark focus-visible:text-accent-hover relative z-10
+      flex min-w-0 flex-col gap-2 px-4 py-6"
+  >
+    <span
+      class="inline-flex items-center justify-center gap-2 sm:justify-start"
+    >
+      <Icon class="h-12 w-12 shrink-0 sm:h-5 sm:w-5" />
+      <span class="font-display hidden text-sm tracking-wide sm:block"
+        >{label}</span
+      >
+    </span>
+    <span
+      class="text-foundation group-hover:text-background-dark
+        group-focus-visible:text-background-dark hidden truncate font-mono
+        text-xs sm:block"
+      >@{handle}</span
+    >
+  </a>
+</li>

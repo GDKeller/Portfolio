@@ -8,7 +8,7 @@ import IconMenu from "./icons/IconMenu.svg";
 import IconArrowDown from "./icons/IconArrowDown.svg";
 import IconArrowUp from "./icons/IconArrowUp.svg";
 import headshotDithered from "../images/headshots/grant-headshot-dithered.png";
-import { RESUME_HREF } from "../lib/site-links";
+import { RESUME_HREF, SOCIAL } from "../lib/site-links";
 ---
 
 <div
@@ -65,7 +65,7 @@ import { RESUME_HREF } from "../lib/site-links";
     <div class="ml-auto flex gap-1 pl-px text-sm">
       <div class="hidden items-center gap-1 md:flex">
         <Link
-          href="https://github.com/gdkeller"
+          href={SOCIAL.github.url}
           target="_blank"
           variant="subtle"
           class="icon-link group hover:bg-accent-hover bg-background-dark
@@ -80,7 +80,7 @@ import { RESUME_HREF } from "../lib/site-links";
           <span class="sr-only">GitHub</span>
         </Link>
         <Link
-          href="https://www.linkedin.com/in/grantdkeller/"
+          href={SOCIAL.linkedin.url}
           target="_blank"
           variant="subtle"
           class="icon-link group bg-background-dark hover:bg-accent-hover
