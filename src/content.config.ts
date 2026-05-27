@@ -75,13 +75,14 @@ const current = defineCollection({
     type: z.string().optional(),
     description: z.string(),
     image: z.string().optional(),
+    imageRemote: z.url().optional(),
     imageAlt: z.string().optional(),
     video: z.string().optional(),
     tech: z.array(z.string()).optional(),
     status: z.enum(["live", "beta", "launching-soon"]).optional(),
     brand: z.enum(["davant"]).optional(),
     order: z.number().optional(),
-    focal: z.boolean().optional(),
+    focal: z.string().optional(),
   }),
 });
 

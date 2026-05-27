@@ -4,6 +4,7 @@ url: https://nasapicture.com/
 type: Web
 description: Static proxy API of NASA's Astronomy Picture of the Day.
 image: nasapicture.webp
+imageRemote: https://api.nasapicture.com/image-sd.jpg
 imageAlt: NASA Picture astronomy photo gallery
 tech:
   - CF Workers

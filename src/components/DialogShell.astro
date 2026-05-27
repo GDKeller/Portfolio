@@ -1,0 +1,161 @@
+---
+/**
+ * Shared chrome for the site's modal dialogs (HireModal, MobileMenu).
+ *
+ * Provides the dialog element, notched close button, title bar, decorative
+ * overlays, and click-outside backdrop. Page scroll-lock and scanline-pause
+ * are wired globally (base.css, Overlays.astro) and trigger on any open dialog.
+ *
+ * Slot the dialog body as the default slot. The title is rendered for you;
+ * pass `title` and an optional `titleId` if you want to reference it.
+ */
+
+import Overlays from "./Overlays.astro";
+import IconClose from "./icons/IconClose.svg";
+
+interface Props {
+  id: string;
+  title: string;
+  titleId?: string;
+  frameMaxWidth?: string;
+  closeLabel?: string;
+}
+
+const {
+  id,
+  title,
+  titleId = `${id}-title`,
+  frameMaxWidth = "max-w-lg",
+  closeLabel = "Close dialog",
+} = Astro.props;
+---
+
+<dialog
+  id={id}
+  class="dialog-shell fixed inset-0 h-dvh max-h-screen w-dvw max-w-screen
+    justify-center overflow-y-auto overscroll-contain border-none bg-transparent
+    p-4 open:flex"
+  aria-labelledby={titleId}
+>
+  <article
+    class:list={[
+      "dialog-shell-frame relative m-auto w-full",
+      frameMaxWidth,
+    ]}
+  >
+    <span
+      class="dialog-shell-backdrop bg-background-dark absolute inset-0 z-2"
+      aria-hidden="true"></span>
+    <form
+      method="dialog"
+      class="close-button-frame absolute top-0 right-0 z-5 -translate-y-1/2
+        sm:translate-x-2"
+    >
+      <button
+        type="submit"
+        class="text-emphasis close-button bg-background-dark
+          hover:text-background-dark hover:bg-emphasis focus-visible:bg-emphasis
+          focus-visible:text-background-dark hover:border-emphasis relative flex
+          h-14 w-14 cursor-pointer items-center justify-center"
+        aria-label={closeLabel}
+      >
+        <span class="absolute -inset-0.5">
+          <Overlays
+            position="absolute"
+            blend={false}
+            scanlinesClass="z-2"
+            scanlinesOpacityClass="opacity-5"
+            noiseClass="z-1"
+            noiseOpacityClass="opacity-6"
+          />
+        </span>
+        <IconClose class="z-10 h-6 w-6" />
+      </button>
+    </form>
+
+    <div class="relative">
+      <header class="border-faint flex">
+        <h2
+          id={titleId}
+          class="text-emphasis bg-background-dark border-faint relative isolate
+            z-8 mr-auto flex -translate-x-0.5 -translate-y-1/2 overflow-hidden
+            border-2 py-5 pr-8 pl-8 font-mono text-base leading-none font-light
+            tracking-wide uppercase"
+        >
+          <span class="absolute -inset-0.5">
+            <Overlays
+              position="absolute"
+              blend={false}
+              scanlinesClass="z-2"
+              scanlinesOpacityClass="opacity-5"
+              noiseClass="z-1"
+              noiseOpacityClass="opacity-6"
+            />
+          </span>
+          <span class="z-10">{title}</span>
+        </h2>
+      </header>
+
+      <slot />
+    </div>
+
+    <div
+      class="pointer-events-none absolute -inset-0.5 z-4 overflow-hidden"
+      aria-hidden="true"
+    >
+      <Overlays
+        position="absolute"
+        scanlinesClass="z-2"
+        scanlinesOpacityClass="opacity-5"
+        noiseClass="z-1"
+        noiseOpacityClass="opacity-6"
+      />
+    </div>
+  </article>
+  <form method="dialog" class="fixed inset-0 -z-10">
+    <button class="h-full w-full cursor-default" aria-label={closeLabel}
+      ><span class="sr-only">close</span></button
+    >
+  </form>
+</dialog>
+
+<style lang="scss">
+  @reference "../styles/main.css";
+
+  /* Clip-path with a notched bottom-right corner. Held as a custom property
+     so backdrop and frame stroke can share it. */
+  .dialog-shell-frame {
+    --clip-tr: polygon(0 0, calc(100% - 20%) 0, 100% 20%, 100% 100%, 0 100%);
+  }
+
+  .close-button {
+    clip-path: var(--clip-tr);
+  }
+
+  /* Border ring lives on the form wrapper so it paints before the button in
+     tree order. Putting it on .close-button itself doesn't work: the button's
+     clip-path creates a stacking context, which traps a negative-z-index
+     ::before above the button's own background. */
+  .close-button-frame::before {
+    @apply bg-faint absolute -top-0.5 -right-0.5 -bottom-0.5 -left-0.5;
+    content: "";
+    clip-path: var(--clip-tr);
+  }
+
+  .dialog-shell::backdrop {
+    background: color-mix(in oklch, var(--color-background) 90%, transparent);
+    backdrop-filter: blur(8px);
+  }
+
+  /* Frame stroke: 1px outline behind the backdrop, same clip-path. */
+  .dialog-shell-frame::after {
+    @apply bg-faint pointer-events-none absolute -inset-0.5 z-1;
+    content: "";
+  }
+
+  @media (prefers-contrast: more) {
+    .dialog-shell-frame::after {
+      background: var(--color-emphasis);
+    }
+  }
+</style>
