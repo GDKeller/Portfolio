@@ -1,0 +1,68 @@
+---
+import ContactCard from "./ContactCard.astro";
+import DialogShell from "./DialogShell.astro";
+import IconArrowRight from "./icons/IconArrowRight.svg";
+
+const navLinks = [
+  { href: "#building", label: "Building" },
+  { href: "#skills", label: "Skills" },
+  { href: "#jobs", label: "Experience" },
+  { href: "#projects", label: "Projects" },
+];
+---
+
+<DialogShell
+  id="mobile_menu"
+  title="Directory"
+  frameMaxWidth="max-w-md"
+  closeLabel="Close menu"
+>
+  <nav aria-label="Primary" class="relative z-10">
+    <ul class="border-faint list-none border-t-2">
+      {
+        navLinks.map(({ href, label }) => (
+          <li class="border-faint border-b-2 last:border-b-0">
+            <a
+              href={href}
+              class="mobile-nav-link group text-emphasis
+                hover:text-highlight-hover focus-visible:text-highlight-hover
+                flex min-h-12 items-center justify-between gap-4 px-6 py-4
+                font-mono text-base tracking-wide uppercase transition-colors"
+            >
+              <span>{label}</span>
+              <IconArrowRight
+                class="text-emphasis group-hover:text-highlight-hover
+                  group-focus-visible:text-highlight-hover h-4 w-4
+                  transition-colors"
+              />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <ContactCard />
+</DialogShell>
+
+<script>
+  /* Close the dialog on in-page anchor clicks. Two reasons: (1) UX, the modal
+     shouldn't stay stranded over the scroll destination; (2) the global
+     scroll-lock rule in base.css locks html overflow while any dialog is
+     open, so the dialog has to close before the browser's native scroll-to-
+     hash can take effect. */
+  const dialog = document.getElementById(
+    "mobile_menu",
+  ) as HTMLDialogElement | null;
+
+  dialog?.addEventListener(
+    "click",
+    (event) => {
+      const target = event.target as HTMLElement | null;
+      const link = target?.closest<HTMLAnchorElement>('a[href^="#"]');
+      if (!link || !dialog.contains(link)) return;
+      dialog.close();
+    },
+    true,
+  );
+</script>
