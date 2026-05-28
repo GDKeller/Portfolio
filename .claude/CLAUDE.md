@@ -33,3 +33,17 @@ Tokens encode _decisions_, not _elements_. If changing a token's value should up
 
 - Ask before creating new board files (tasks, ADRs, etc.).
 - ADRs live in `board/reference/`, not `board/planning/` (planning is for actionable items). Standard `ADR-NNNN_kebab-title.md` filename and `type: adr` frontmatter.
+
+## Git workflow
+
+Branching cycle:
+
+1. Cut feature/refactor/fix branches from `main` (NOT from `develop`).
+2. Open PRs targeting `develop` (staging).
+3. Periodically open a promotion PR from `develop` to `main` for release.
+
+The only PRs that target `main` are the periodic `develop` to `main` promotions. All normal feature work targets `develop`.
+
+## Pull requests
+
+PR bodies use a `## Summary` section with bullets only. Do NOT include a "Test plan" or "Testing" checklist; this project has no formal QA process and the boilerplate is noise.
