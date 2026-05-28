@@ -96,42 +96,32 @@ import IconFx from "./icons/IconFx.svg";
       }
     }
 
+    const button = document.querySelector<HTMLButtonElement>(
+      "[data-simple-mode-toggle]",
+    );
+    const tooltip = document.querySelector<HTMLElement>(
+      "[data-simple-mode-tooltip]",
+    );
+
     function applyState(on: boolean): void {
       if (on) {
         document.documentElement.dataset.simpleMode = "on";
       } else {
         delete document.documentElement.dataset.simpleMode;
       }
-      document
-        .querySelectorAll<HTMLButtonElement>("[data-simple-mode-toggle]")
-        .forEach((btn) => {
-          btn.setAttribute("aria-pressed", on ? "true" : "false");
-        });
-      document
-        .querySelectorAll<HTMLElement>("[data-simple-mode-tooltip]")
-        .forEach((tip) => {
-          tip.dataset.state = on ? "on" : "off";
-        });
+      button?.setAttribute("aria-pressed", on ? "true" : "false");
+      if (tooltip) tooltip.dataset.state = on ? "on" : "off";
     }
 
-    const buttons = document.querySelectorAll<HTMLButtonElement>(
-      "[data-simple-mode-toggle]",
-    );
-
-    // Initialize aria-pressed from the actual document state (set pre-paint by
+    // Initialize from the actual document state (set pre-paint by
     // Layout.astro's inline script). Do NOT re-read localStorage here — the
     // dataset is the source of truth post-paint.
-    const initial = document.documentElement.dataset.simpleMode === "on";
-    buttons.forEach((btn) => {
-      btn.setAttribute("aria-pressed", initial ? "true" : "false");
-      btn.addEventListener("click", () => {
-        const next = document.documentElement.dataset.simpleMode !== "on";
-        applyState(next);
-        writeStored(next);
-        document.dispatchEvent(
-          new CustomEvent("simple-mode:change", { detail: { on: next } }),
-        );
-      });
+    applyState(document.documentElement.dataset.simpleMode === "on");
+
+    button?.addEventListener("click", () => {
+      const next = document.documentElement.dataset.simpleMode !== "on";
+      applyState(next);
+      writeStored(next);
     });
 
     // Cross-tab sync: when another tab toggles, mirror the change here.
@@ -139,15 +129,6 @@ import IconFx from "./icons/IconFx.svg";
       if (event.key !== STORAGE_KEY) return;
       applyState(readStored());
     });
-
-    const tooltip = document.querySelector<HTMLElement>(
-      "[data-simple-mode-tooltip]",
-    );
-
-    // Sync initial tooltip state with the button (set pre-paint).
-    if (tooltip) {
-      tooltip.dataset.state = initial ? "on" : "off";
-    }
 
     // Place above the button while the page is near the top, otherwise below.
     // While near the top there's more empty atmosphere above; once scrolled,
@@ -163,11 +144,9 @@ import IconFx from "./icons/IconFx.svg";
       delete tooltip.dataset.show;
     }
 
-    buttons.forEach((btn) => {
-      btn.addEventListener("mouseenter", showTooltip);
-      btn.addEventListener("mouseleave", hideTooltip);
-      btn.addEventListener("focus", showTooltip);
-      btn.addEventListener("blur", hideTooltip);
-    });
+    button?.addEventListener("mouseenter", showTooltip);
+    button?.addEventListener("mouseleave", hideTooltip);
+    button?.addEventListener("focus", showTooltip);
+    button?.addEventListener("blur", hideTooltip);
   </script>
 </button>
